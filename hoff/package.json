@@ -5,6 +5,10 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps"
   },
+  "build":{
+    "appId": "com.hoff.omniwheel",
+    "productName": "omniwheel"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~17.3.0",
