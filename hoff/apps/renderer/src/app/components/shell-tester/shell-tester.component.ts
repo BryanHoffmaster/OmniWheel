@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './shell-tester.component.html',
-  styleUrl: './shell-tester.component.css',
+  styleUrl: './shell-tester.component.scss',
 })
 export class ShellTesterComponent {
 
