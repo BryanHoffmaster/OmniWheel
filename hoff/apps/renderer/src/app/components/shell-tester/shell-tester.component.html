@@ -1,0 +1,4 @@
+<label for="shell-input">Shell Command:
+  <input type="text" name="shell-input" id="shell-input" #shellInput>
+</label>
+<button type="button" (click)="runCommand(shellInput.value)">Run Command</button>
