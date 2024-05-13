@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ShellServiceService } from '../../services/shell-service.service';
 
 @Component({
   selector: 'app-shell-tester',
@@ -10,7 +11,9 @@ import { Component } from '@angular/core';
 })
 export class ShellTesterComponent {
 
+  shellService = inject(ShellServiceService);
+
   runCommand = (value: string) => {
-    console.log('runCommand', value);
+    this.shellService.runCommand(value)
   }
 }
