@@ -30,6 +30,7 @@ export class ConfigService {
 
   async getConfig(): Promise<OmniwheelConfig | unknown> {
     try {
+      console.info('checking if electron bridge exists...', this.electronBridge);
       const config = await this.electronBridge?.getConfig();
       if (!config) {
         console.error(
@@ -38,7 +39,7 @@ export class ConfigService {
         );
       } else {
         this.configuration = JSON.parse(config) as OmniwheelConfig;
-        console.log('config from getConfig:', config);
+        console.info('ConfigService.getConfig result : ', config);
       }
       return config;
     } catch (error) {

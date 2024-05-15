@@ -26,6 +26,8 @@ ipcMain.handle('get-config', async () => {
   if (!ConfigService.jsonData) {
     await ConfigService.loadConfig();
     return ConfigService.jsonData;
+  }else{
+    return ConfigService.jsonData;
   }
 });
 
@@ -34,8 +36,6 @@ ipcMain.handle('set-config', async (event, data: string) => {
   await ConfigService.saveConfig(data);
   return ConfigService.jsonData;
 });
-
-// TODO: in the future handle this async with a promise and use the event.reply, and a signal (in exec properties) to call back to the frontend
 
 ipcMain.handle('run-command', (event, command: string) => {
   console.log('Running command: ', command);

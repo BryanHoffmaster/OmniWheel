@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ElectronBridge } from "shared";
 
-
-// TODO: this needs to be called "ElectronBridgeService" and have another
 @Injectable({
   providedIn: 'root'
 })
@@ -22,12 +20,12 @@ export class ShellServiceService {
 
   async runCommand(command: string) {
    const response = await this.electronBridge?.runCommand(command);
-   console.log('response from runCommand:', response);
+   console.info('response from runCommand:', response);
   }
 
   async sayHello () {
    const response =  await this.electronBridge?.sayHello()
-   console.log('response from sayHello:', response);
+   console.info('response from sayHello:', response);
   }
 
   openFile(fileURI: string){
