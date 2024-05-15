@@ -21,13 +21,17 @@ class ConfigService {
       const config = await this.loadConfigFromFile();
 
       if (!config) {
-        throw new Error('Empty or No config file found');
+        console.error(
+          `Empty config file found in ConfigService.loadConfig with data: `,
+          config
+        );
+        return ConfigService.config;
       }
 
-      ConfigService.config = config;
+      ConfigService.config = JSON.parse(config) as OmniwheelConfig;
       return ConfigService.config;
     } catch (error) {
-      console.error('Error reading the config.json file', error);
+      console.error('Error loading file in ConfigService.loadConfig : ', error);
       return null;
     }
   }
@@ -39,7 +43,10 @@ class ConfigService {
       ConfigService.config = parsedData;
       await this.saveConfigToFile(parsedData);
     } catch (error) {
-      console.error('Error writing the config.json file', error);
+      console.error(
+        'Error writing the config.json file in ConfigService.saveConfig : ',
+        error
+      );
     }
   }
 
@@ -60,29 +67,28 @@ class ConfigService {
     });
   }
 
-  private static loadConfigFromFile(): Promise<OmniwheelConfig> {
+  private static loadConfigFromFile(): Promise<string> {
     return new Promise((resolve, reject) => {
       fs.readFile(ConfigService.configPath, 'utf-8', (err, data) => {
         if (err) {
           reject(err);
         } else {
-          ConfigService.jsonData = data;
-          resolve(JSON.parse(data));
+          resolve(data);
         }
       });
     });
   }
 
-  private static loadDefaultConfig(): Promise<OmniwheelConfig> {
+  private static loadDefaultConfig(): Promise<string> {
     return new Promise((resolve, reject) => {
       fs.readFile(
-        path.join(__dirname, '../default-config.json'),
+        path.join(__dirname, 'assets/default.config.json'),
         'utf-8',
         (err, data) => {
           if (err) {
             reject(err);
           } else {
-            resolve(JSON.parse(data));
+            resolve(data);
           }
         }
       );
@@ -103,9 +109,18 @@ class ConfigService {
 
   private static async setDefaultConfig(): Promise<void> {
     try {
-      await this.loadDefaultConfig();
+      const rawData = await this.loadDefaultConfig();
+      ConfigService.jsonData = rawData;
+      ConfigService.config = JSON.parse(rawData) as OmniwheelConfig;
+      console.log(
+        'ServiceConfig.setDefaultConfig configuration loaded with data : ',
+        ConfigService.config
+      );
     } catch (error) {
-      console.error('Error setting the default-config.json file', error);
+      console.error(
+        'Error setting the default-config.json file in ConfigService.setDefaultConfig : ',
+        error
+      );
     }
   }
 
@@ -114,8 +129,17 @@ class ConfigService {
       ConfigService.instance = new ConfigService();
     }
 
-    const fileExists = await ConfigService.checkFileExists();
-    if (!fileExists) {
+    try {
+      console.log('checking if file exists...');
+      await ConfigService.checkFileExists();
+      console.info(
+        'Config file already exists in ConfigService.buildInstance, pulling in data...'
+      );
+      await ConfigService.loadConfig();
+    } catch (error) {
+      console.info(
+        'No config file exists, generating default one in ConfigService.buildInstance :'
+      );
       await ConfigService.setDefaultConfig();
     }
 

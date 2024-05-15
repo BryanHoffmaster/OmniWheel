@@ -46,9 +46,14 @@ export default class App {
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.
     if (rendererAppName) {
+      try {
+        console.log(`Initializing ConfigService...`);
+        ConfigService.buildInstance(); // create a config service singleton instance
+      } catch (error) {
+        console.error(`Error creating config service: ${error}`);
+      }
       App.initMainWindow();
       App.loadMainWindow();
-      ConfigService.buildInstance(); // create a config service singleton instance
     }
   }
 
