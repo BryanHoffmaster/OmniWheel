@@ -14,15 +14,6 @@ export default class ElectronEvents {
   }
 }
 
-// TODO: Circle back to this if there is a lot of custom functions you need to handle
-// const handlerNames = [
-//   'get-app-version',
-//  'say-hello',
-//   'open-file',
-//   'quit'
-// ] as const
-// export type HandlerName = typeof handlerNames[number]
-
 // Retrieve app version
 ipcMain.handle('get-app-version', () => {
   console.log(`Fetching application version... [v${environment.version}]`);
