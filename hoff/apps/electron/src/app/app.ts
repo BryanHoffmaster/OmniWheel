@@ -3,6 +3,7 @@ import { join } from 'path';
 import { format } from 'url';
 import { environment } from '../environments/environment';
 import { rendererAppName, rendererAppPort } from './constants';
+import ConfigService from './services/config-service';
 
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will
@@ -47,6 +48,7 @@ export default class App {
     if (rendererAppName) {
       App.initMainWindow();
       App.loadMainWindow();
+      ConfigService.buildInstance(); // create a config service singleton instance
     }
   }
 

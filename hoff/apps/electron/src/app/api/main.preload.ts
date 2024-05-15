@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import { ElectronBridge } from "shared";
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
-contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer, // TODO: DON"T DO THIS - ONLY FOR TESTING
+contextBridge.exposeInMainWorld('electron', <ElectronBridge>{
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   platform: process.platform,
   sayHello: () => ipcRenderer.invoke('say-hello'),
@@ -12,8 +12,11 @@ contextBridge.exposeInMainWorld('electron', {
   runCommand: (command: string) => ipcRenderer.invoke('run-command', command),
   openFile: (fileURI: string) => ipcRenderer.invoke('open-file', fileURI),
 
+  getConfig: () => ipcRenderer.invoke('get-config'),
+  setConfig: (data: string) => ipcRenderer.invoke('set-config', data),
+
   // The following are basic ways to setup a send/receive channel from the renderer to the main process
-  send: (channel: string, data: unknown) => {
+  send: (channel: string, ...data: unknown[]) => {
     // whitelist channels
     const validChannels = ['toMain'];
     if (validChannels.includes(channel)) {
