@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
-import { ElectronBridge, OmniwheelConfig } from 'shared';
+import { BehaviorSubject } from 'rxjs';
+import { ElectronBridge, Omniwheel, OmniwheelConfig } from 'shared';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
-  configuration: OmniwheelConfig | null = null;
-  electronBridge: ElectronBridge | null = null;
+  private configuration: OmniwheelConfig | null = null;
+  private electronBridge: ElectronBridge | null = null;
+
+  private _omniwheel: BehaviorSubject<Omniwheel> =
+    new BehaviorSubject<Omniwheel>(new Omniwheel());
+  omniwheel$ = this._omniwheel.asObservable();
 
   constructor() {
     //@ts-expect-error 'electron' is the exposed API surface in main.preload.ts in the browser `window` object
@@ -30,7 +35,10 @@ export class ConfigService {
 
   async getConfig(): Promise<OmniwheelConfig | unknown> {
     try {
-      console.info('checking if electron bridge exists...', this.electronBridge);
+      console.info(
+        'checking if electron bridge exists...',
+        this.electronBridge
+      );
       const config = await this.electronBridge?.getConfig();
       if (!config) {
         console.error(
@@ -38,8 +46,10 @@ export class ConfigService {
           config
         );
       } else {
-        this.configuration = JSON.parse(config) as OmniwheelConfig;
         console.info('ConfigService.getConfig result : ', config);
+        const parsedConfig = JSON.parse(config);
+        const omniwheel = new Omniwheel(parsedConfig);
+        this._omniwheel.next(omniwheel);
       }
       return config;
     } catch (error) {

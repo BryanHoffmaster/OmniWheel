@@ -15,8 +15,50 @@
 	},
 	"nodes": [
 		{
-			"id": "DefaultNode",
+			"id": "DefaultNode 1",
 			"name": "Node 1",
+			"tooltip": "Display the directory listing.",
+			"img": "",
+			"bgColor": "#FFFF",
+			"textColor": "#0000",
+			"rotate": 0,
+			"radius": 50,
+			"curvature": 50,
+			"action": [
+				{"type": "command", "input": "ls -la"}
+			]
+		},
+    {
+			"id": "DefaultNode 2",
+			"name": "Node 2",
+			"tooltip": "Display the directory listing.",
+			"img": "",
+			"bgColor": "#FFFF",
+			"textColor": "#0000",
+			"rotate": 0,
+			"radius": 50,
+			"curvature": 50,
+			"action": [
+				{"type": "command", "input": "ls -la"}
+			]
+		},
+    {
+			"id": "DefaultNode 3",
+			"name": "Node 3",
+			"tooltip": "Display the directory listing.",
+			"img": "",
+			"bgColor": "#FFFF",
+			"textColor": "#0000",
+			"rotate": 0,
+			"radius": 50,
+			"curvature": 50,
+			"action": [
+				{"type": "command", "input": "ls -la"}
+			]
+		},
+    {
+			"id": "DefaultNode 4",
+			"name": "Node 4",
 			"tooltip": "Display the directory listing.",
 			"img": "",
 			"bgColor": "#FFFF",
