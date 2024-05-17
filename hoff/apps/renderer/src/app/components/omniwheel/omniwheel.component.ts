@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'omniwheel',
+  selector: 'app-omniwheel',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './omniwheel.component.html',
