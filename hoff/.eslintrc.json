@@ -19,7 +19,8 @@
             ]
           }
         ],
-        "max-len": [0, {"code": 120}]
+        "max-len": ["warn", {"code": 150}],
+        "semi": ["error", "never"]
       }
     },
     {
