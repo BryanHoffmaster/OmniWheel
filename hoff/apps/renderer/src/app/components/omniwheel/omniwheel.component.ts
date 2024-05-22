@@ -1,17 +1,11 @@
-import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  ViewContainerRef,
-  inject,
-} from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Omniwheel } from 'shared';
-import { ConfigService } from '../../services/config.service';
-import { HubComponent } from './parts/hub/hub.component';
-import { NodeComponent } from './parts/node/node.component';
-import { SpokeComponent } from './parts/spoke/spoke.component';
+import { CommonModule } from '@angular/common'
+import { ChangeDetectionStrategy, Component, ComponentRef, OnDestroy, ViewChild, ViewContainerRef, inject } from '@angular/core'
+import { Subscription } from 'rxjs'
+import { Omniwheel } from 'shared'
+import { ConfigService } from '../../services/config.service'
+import { HubComponent } from './parts/hub/hub.component'
+import { NodeComponent } from './parts/node/node.component'
+import { SpokeComponent } from './parts/spoke/spoke.component'
 
 @Component({
   selector: 'app-omniwheel',
@@ -22,35 +16,29 @@ import { SpokeComponent } from './parts/spoke/spoke.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OmniwheelComponent implements OnDestroy {
-  private configService = inject(ConfigService);
-  private containerRef = inject(ViewContainerRef);
+  private configService = inject(ConfigService)
+  private hubs: ComponentRef<HubComponent>[] = []
+  private subs: Subscription[] = []
 
-  private nodes: NodeComponent[] = [];
-  private subs: Subscription[] = [];
+  @ViewChild('hubContainer', { read: ViewContainerRef,static: false }) wheelNodeContainer!: ViewContainerRef
+
 
   constructor() {
     this.subs.push(
       this.configService.omniwheel$.subscribe((omniwheel) => {
-        this.containerRef.clear();
-        this.buildNodes(omniwheel);
+        this.buildHub(omniwheel)
       })
-    );
+    )
   }
 
   ngOnDestroy() {
-    this.subs.forEach((sub) => sub.unsubscribe());
+    this.subs.forEach((sub) => sub.unsubscribe())
   }
 
-  buildNodes(omniwheel: Omniwheel) {
-    const nodes = omniwheel.nodes.map((nodeConfig) => {
-      const nodeRef = this.containerRef.createComponent(NodeComponent);
-      nodeRef.setInput('config', nodeConfig);
-      return nodeRef.instance;
-    });
-    this.nodes = nodes;
-  }
-
-  randomizeNodeColors(): void {
-    this.configService.randomizeNodeConfig();
+  buildHub(omniwheel: Omniwheel) {
+    const hubRef = this.wheelNodeContainer.createComponent(HubComponent)
+    hubRef.setInput('config', omniwheel)
+    hubRef.changeDetectorRef.detectChanges()
+    this.hubs.push(hubRef)
   }
 }

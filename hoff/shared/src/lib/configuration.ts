@@ -17,6 +17,7 @@ export interface Hub {
   textColor: string;
 }
 
+// TODO: make this "wheelNode", the name is confusing against Node from HTML Element root
 export interface Node {
   id: string;
   name: string;
