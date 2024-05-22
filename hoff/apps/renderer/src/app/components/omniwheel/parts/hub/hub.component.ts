@@ -8,7 +8,7 @@ import { NodeComponent } from '../node/node.component'
 @Component({
   selector: 'app-hub',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NodeComponent],
   templateUrl: './hub.component.html',
   styleUrl: './hub.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,42 +18,31 @@ export class HubComponent implements OnDestroy, AfterViewInit {
   private nodes: NodeComponent[] = []
   private subs: Subscription[] = []
 
-  @ViewChild('wheelNodeContainer', { read: ViewContainerRef,static: false }) wheelNodeContainer!: ViewContainerRef
+  @ViewChild('wheelNodeContainer', { read: ViewContainerRef })
+  private wheelNodeContainer!: ViewContainerRef
 
   config = input.required<Omniwheel>()
 
-  constructor() {
-    // this.renderer.addClass(this.containerRef.element.nativeElement, 'hub')
-  }
-
-  ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
-    this.subs.push(
-      this.configService.omniwheel$.subscribe((omniwheel) => {
-        // TODO: should I get more granular here with just nodes$?
-        this.buildNodes(omniwheel.nodes)
-      })
-    )
+  ngAfterViewInit() {
+    this.buildNodes(this.config().nodes)
   }
 
   ngOnDestroy() {
     this.subs.forEach((sub) => sub.unsubscribe())
   }
 
-  buildNodes(wheelNodes: Node[]) {
+  buildNodes(wheelNodes: Node[]): void {
     const nodes = wheelNodes.map((nodeConfig) => {
       const nodeRef = this.wheelNodeContainer.createComponent(NodeComponent)
       nodeRef.setInput('config', nodeConfig)
 
-      // TODO: Test this memory leak prevention!!
-      nodeRef.onDestroy(() => {
-        this.nodes = this.nodes.filter((n) => n.config().id !== nodeRef.instance.config().id)
-      })
+      // TODO: Test this memory leak prevention when you start
+      //       tracking node component instance updates
+      // nodeRef.onDestroy(() => {
+      //   this.nodes = this.nodes.filter((n) => n.config().id !== nodeRef.instance.config().id)
+      // })
 
-      // this.renderer.appendChild(this.containerRef.element.nativeElement, nodeRef.location.nativeElement)
       nodeRef.changeDetectorRef.detectChanges()
-
       return nodeRef.instance
     })
 
