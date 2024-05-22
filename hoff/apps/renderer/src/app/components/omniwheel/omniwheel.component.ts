@@ -42,11 +42,15 @@ export class OmniwheelComponent implements OnDestroy {
   }
 
   buildNodes(omniwheel: Omniwheel) {
-    const nodes = omniwheel.nodes.map((node) => {
+    const nodes = omniwheel.nodes.map((nodeConfig) => {
       const nodeRef = this.containerRef.createComponent(NodeComponent);
-      nodeRef.setInput('nodeData', node);
+      nodeRef.setInput('config', nodeConfig);
       return nodeRef.instance;
     });
     this.nodes = nodes;
+  }
+
+  randomizeNodeColors(): void {
+    this.configService.randomizeNodeConfig();
   }
 }

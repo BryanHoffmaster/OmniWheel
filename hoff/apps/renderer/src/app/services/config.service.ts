@@ -60,4 +60,26 @@ export class ConfigService {
       return null;
     }
   }
+
+  async randomizeNodeConfig(): Promise<void> {
+    const randomHex = () => {
+      // Random Hex color values
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    };
+
+    // make a copy of current omniwheel- update node color values and next the value
+    const currentOmniwheel = this._omniwheel.getValue();
+    const newOmniwheel = new Omniwheel(currentOmniwheel);
+    newOmniwheel.nodes.forEach((node) => {
+      node.bgColor = randomHex();
+      node.textColor = randomHex();
+    });
+
+    this._omniwheel.next(newOmniwheel);
+  }
 }
