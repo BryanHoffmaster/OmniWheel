@@ -6,6 +6,10 @@ import { ConfigService } from '../../services/config.service'
 import { HubComponent } from './parts/hub/hub.component'
 import { SpokeComponent } from './parts/spoke/spoke.component'
 
+// TODO: This article will tell you all you need to know about how to handle trig functions to get the right angle https://web.dev/articles/css-trig-functions
+// TODO: Use the renderer2.setClass() function to programmatically set global CSS variables!
+
+
 @Component({
   selector: 'app-omniwheel',
   standalone: true,
@@ -35,7 +39,7 @@ export class OmniwheelComponent implements OnDestroy,AfterViewInit {
   }
 
   buildHub(omniwheel: Omniwheel): void {
-    this.hubs.forEach((hub) => hub.destroy()) // NOTE: prevents stacking hubs
+    this.hubs.forEach((hub) => hub.destroy()) // NOTE: prevents stacking hubs and memory leaks
     const hubRef = this.wheelNodeContainer.createComponent(HubComponent)
     hubRef.setInput('config', omniwheel)
     hubRef.changeDetectorRef.detectChanges()
