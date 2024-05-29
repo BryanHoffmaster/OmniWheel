@@ -1,2 +1,37 @@
-<p>modal-config-form works!</p>
 <button (click)="onClose()">Close</button>
+<form [formGroup]="form">
+  <ng-container [formGroupName]="'hub'">
+    <h4>Hub Properties</h4>
+    <ng-container *ngFor="let key of hubKeys">
+      <label [for]="key">{{key}}</label>
+      <input type="text" formControlName="{{key}}" name="{{key}}" [value]="form.get('hub')?.get(key)?.value">
+    </ng-container>
+  </ng-container>
+  <ng-container [formGroupName]="'rim'">
+    <h4>Rim Properties</h4>
+    <ng-container *ngFor="let key of rimKeys">
+      <label [for]="key">{{key}}</label>
+      <input type="text" formControlName="{{key}}" name="{{key}}" [value]="form.get('rim')?.get(key)?.value">
+    </ng-container>
+  </ng-container>
+  <ng-container [formGroupName]="'axle'">
+    <h4>Axle Properties</h4>
+    <ng-container *ngFor="let key of axleKeys">
+      <label [for]="key">{{key}}</label>
+      <input type="text" formControlName="{{key}}" name="{{key}}" [value]="form.get('axle')?.get(key)?.value">
+    </ng-container>
+  </ng-container>
+
+  <h4>Nodes</h4>
+  <ng-container [formGroupName]="'nodes'">
+    <ng-container *ngFor="let node of nodes.controls; let i =index" formGroupName="{{i}}">
+      <h5>{{node.get('id')?.value}}</h5>
+      <div class="node-group">
+        <ng-container *ngFor="let keys of node.getRawValue() | keyvalue">
+          <label [for]="keys.key">{{keys.key}}</label>
+          <input type="text" [formControlName]="getKeyName(keys.key)" name="{{keys.key}}" [value]="keys.value">
+        </ng-container>
+      </div>
+    </ng-container>
+  </ng-container>
+</form>

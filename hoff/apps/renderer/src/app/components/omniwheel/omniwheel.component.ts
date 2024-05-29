@@ -28,7 +28,7 @@ export class OmniwheelComponent implements OnDestroy,AfterViewInit {
 
   ngAfterViewInit() {
     this.subs.push(
-      this.configService.omniwheel$.subscribe((omniwheel) => {
+      this.configService.both.subscribe((omniwheel) => {
         this.buildHub(omniwheel)
       })
     )
